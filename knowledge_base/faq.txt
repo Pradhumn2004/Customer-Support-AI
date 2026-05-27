@@ -1,0 +1,34 @@
+Frequently Asked Questions - Customer Support
+
+How do I reset my password?
+To reset your password, click the "Forgot Password" link on the login page. Enter your registered email address and you will receive a password reset link within 5 minutes. The link expires after 24 hours. If you don't receive the email, check your spam folder or contact support.
+
+What is your refund policy?
+We offer a 30-day money-back guarantee on all plans. If you are not satisfied with our service, you can request a full refund within 30 days of your purchase. Refunds are processed within 5-7 business days after approval. To request a refund, go to Settings > Billing > Request Refund, or contact our support team.
+
+How do I upgrade or downgrade my plan?
+To change your plan, navigate to Settings > Subscription > Change Plan. Select your desired plan and confirm the change. Upgrades take effect immediately with prorated billing. Downgrades take effect at the end of your current billing cycle.
+
+What payment methods do you accept?
+We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and bank transfers for annual enterprise plans. All payments are processed securely through Stripe.
+
+How do I contact customer support?
+You can reach our support team through:
+- Live chat: Available 24/7 from the bottom-right corner of any page
+- Email: support@company.com (response within 4 hours)
+- Phone: 1-800-555-0199 (Mon-Fri, 9am-6pm EST)
+- Support tickets: Submit through your dashboard
+
+What are your business hours?
+Our AI support is available 24/7. Human support agents are available Monday through Friday, 9am to 6pm EST. Enterprise customers have access to priority 24/7 human support.
+
+How do I cancel my subscription?
+To cancel your subscription, go to Settings > Subscription > Cancel Plan. Your access will continue until the end of your current billing period. No partial refunds are provided for mid-cycle cancellations.
+
+I am experiencing login issues. What should I do?
+Try these steps:
+1. Clear your browser cache and cookies
+2. Disable browser extensions temporarily
+3. Try logging in using an incognito/private window
+4. Ensure your browser is up to date
+5. If the issue persists, contact support with a screenshot of the error
