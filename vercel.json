@@ -1,0 +1,18 @@
+{
+  "experimentalServices": {
+    "frontend": {
+      "root": "frontend",
+      "routePrefix": "/",
+      "framework": "create-react-app"
+    },
+    "backend": {
+      "root": "backend",
+      "routePrefix": "/_/backend",
+      "env": {
+        "CORS_ORIGINS": "https://your-project.vercel.app,http://localhost:3000",
+        "OPENROUTER_API_KEY": "@openrouter-api-key",
+        "LANGCHAIN_API_KEY": "@langchain-api-key"
+      }
+    }
+  }
+}
