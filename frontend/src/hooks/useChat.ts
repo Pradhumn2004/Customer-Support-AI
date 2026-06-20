@@ -1,51 +1,84 @@
-import { useState, useCallback } from 'react';
-import axios from 'axios';
+import { useState, useCallback, useRef } from 'react';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 interface Message {
   role: 'user' | 'assistant' | 'system';
   content: string;
-  sources?: string[];
 }
 
 export const useChat = (sessionId: string) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
+  const abortRef = useRef<AbortController | null>(null);
 
-  const sendMessage = useCallback(async (message: string) => {
+  const sendMessage = useCallback(async (message: string, companyType?: string) => {
     setMessages(prev => [...prev, { role: 'user', content: message }]);
     setLoading(true);
 
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     try {
-      const res = await axios.post(`${API_URL}/api/chat/`, {
-        message,
-        session_id: sessionId
+      const res = await fetch(`${API_URL}/api/chat/stream`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message,
+          session_id: sessionId,
+          company_type: companyType || 'tech'
+        }),
+        signal: controller.signal
       });
 
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: res.data.response,
-        sources: res.data.sources
-      }]);
-    } catch (err) {
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.'
-      }]);
+      if (!res.ok) throw new Error('Network error');
+
+      const reader = res.body?.getReader();
+      if (!reader) throw new Error('No reader');
+
+      const decoder = new TextDecoder();
+      let assistantMsg = '';
+
+      setMessages(prev => [...prev, { role: 'assistant', content: '' }]);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split('\n');
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const token = line.slice(6);
+            assistantMsg += token;
+            setMessages(prev => {
+              const updated = [...prev];
+              updated[updated.length - 1] = { role: 'assistant', content: assistantMsg };
+              return updated;
+            });
+          }
+        }
+      }
+    } catch (err: any) {
+      if (err.name !== 'AbortError') {
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: 'Sorry, I encountered an error. Please try again.'
+        }]);
+      }
     } finally {
       setLoading(false);
+      abortRef.current = null;
     }
   }, [sessionId]);
 
-  const uploadFile = useCallback(async (file: File) => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    await axios.post(`${API_URL}/api/docs/upload`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    });
+  const clearMessages = useCallback(() => {
+    if (abortRef.current) {
+      abortRef.current.abort();
+    }
+    setMessages([]);
   }, []);
 
-  return { messages, loading, sendMessage, uploadFile };
+  return { messages, loading, sendMessage, clearMessages };
 };
