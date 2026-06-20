@@ -33,7 +33,8 @@ export function useChat(companyType: string) {
 
     try {
       const mappedCompany = COMPANY_MAP[companyType] || 'tech';
-      const res = await fetch('http://localhost:8000/api/chat/stream', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const res = await fetch(`${apiBase}/api/chat/stream`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
